@@ -1,4 +1,5 @@
 import { HttpClient } from "./HttpClient";
+import { retry } from "../utils/retry";
 
 export class FetchHttpClient
     implements HttpClient {
@@ -9,9 +10,11 @@ export class FetchHttpClient
 
         const timeout = setTimeout(() => controller.abort(), 5000);
         
-        const response = await fetch(url, {
+        const response = await retry(
+            () => fetch(url, {
             signal: controller.signal
-        });
+        })
+        );
 
         if (!response.ok) {
             throw new Error(
