@@ -17,8 +17,10 @@ export class FetchHttpClient
             throw new Error(
                 `HTTP ${response.status}`
             );
+        } else {
+            clearTimeout(timeout)
         }
-
+        
         return await response.json() as T;
 
     }
