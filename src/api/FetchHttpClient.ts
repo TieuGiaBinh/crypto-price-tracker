@@ -5,7 +5,13 @@ export class FetchHttpClient
 
     async get<T>(url: string): Promise<T> {
 
-        const response = await fetch(url);
+        const controller = new AbortController();
+
+        const timeout = setTimeout(() => controller.abort(), 5000);
+        
+        const response = await fetch(url, {
+            signal: controller.signal
+        });
 
         if (!response.ok) {
             throw new Error(
