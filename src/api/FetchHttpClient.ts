@@ -1,5 +1,6 @@
 import { HttpClient } from "./HttpClient";
 import { retry } from "../utils/retry";
+import { logger } from "../utils/logger"
 
 export class FetchHttpClient
     implements HttpClient {
@@ -13,7 +14,7 @@ export class FetchHttpClient
         const response = await retry(
             () => fetch(url, {
             signal: controller.signal
-        })
+            })
         );
 
         if (!response.ok) {
@@ -22,6 +23,7 @@ export class FetchHttpClient
             );
         } else {
             clearTimeout(timeout)
+            logger.info(`Get ${url} sucessfull`)
         }
         
         return await response.json() as T;
