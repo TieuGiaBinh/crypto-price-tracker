@@ -10,6 +10,6 @@ const httpClient = new FetchHttpClient();
 
 const priceProvider = new CoinGeckoClient(httpClient);
 
-const service = new PriceTrackerService(priceProvider, repository);
+const service = new PriceTrackerService(repository, priceProvider);
 
 await service.track("BTC");
