@@ -1,17 +1,28 @@
+import {Coin} from "../models/Coin"
 import { CoinPrice } from "../models/CoinPrice";
+import {PriceProvider} from "../api/PriceProvider"
 import { PriceRepository } from "../repositories/PriceRepository";
 
 export class PriceTrackerService {
 
     constructor(
 
-        private readonly repository: PriceRepository
+        private readonly repository: PriceRepository,
+        private readonly priceProvider: PriceProvider
 
     ) {}
 
-    async save(price: CoinPrice): Promise<void> {
+    async track(coin: Coin): Promise<void> {
 
-        await this.repository.save(price);
+        const price = await this.priceProvider.getPrice(coin);
+
+        const coinPrice: CoinPrice ={
+            timestamp = new Date(),
+            coin,
+            price
+        };
+        
+        await this.repository.save(coinPrice);
 
     }
 
