@@ -18,7 +18,7 @@ export class GoogleSheetsRepository
 
             "Sheet1!A:C",
             [
-                price.timestamp.toISOSstring(),
+                price.timestamp.toISOString(),
                 price.coin,
                 price.price
             ]
