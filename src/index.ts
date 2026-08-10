@@ -3,8 +3,11 @@ import { GoogleSheetsRepository } from "./repositories/GoogleSheetsRepository";
 import { PriceTrackerService } from "./services/PriceTrackerService";
 import { FetchHttpCLient } from "./api/FetchHttpClient"
 import { CoinGeckoClient } from "./api/CoinGeckoClient"
+import { GoogleSheetsClient } from ".google/GoogleSheetsClient"
 
-const repository = new GoogleSheetsRepository();
+const googlesheetsclient = new GoogleSheetsClient("./credentials/service-account.json");
+
+const repository = new GoogleSheetsRepository(googlesheetsclient, "YOUR_SPREADSHEET_ID");
 
 const httpClient = new FetchHttpClient();
 
