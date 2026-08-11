@@ -5,14 +5,10 @@ export class GoogleSheetsClient {
 
     private readonly client: sheets_v4.Sheets;
 
-    constructor(credentialsPath: string) {
+    constructor(credentialsJson: string) {
 
         const credentials =
-            JSON.parse(
-                fs.readFileSync(
-                    credentialsPath,
-                    "utf-8"
-                )
+            JSON.parse(credentialsJson)
             );
 
         const auth =
