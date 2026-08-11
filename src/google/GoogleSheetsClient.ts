@@ -8,8 +8,7 @@ export class GoogleSheetsClient {
     constructor(credentialsJson: string) {
 
         const credentials =
-            JSON.parse(credentialsJson)
-            );
+            JSON.parse(credentialsJson);
 
         const auth =
             new google.auth.GoogleAuth({
