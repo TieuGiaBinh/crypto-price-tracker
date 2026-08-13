@@ -4,16 +4,19 @@ import { logger } from "./logger";
 interface RetryOptions {
     maxAttempts?: number;
     delayMs?: number;
-    shoudRetry?: (error: unknown) => boolean;
+    shouldRetry?: (error: unknown) => boolean;
 }
+
 export async function retry<T>(
     operation: () => Promise<T>,
-    option: RetryOptions = {
+    options: RetryOptions = {}
+): Promise<T> {
+
+    const {
         maxAttempts = 3,
         delayMs = 100,
         shouldRetry = () => true
-    }
-): Promise<T> {
+    } = options;
 
     let lastError: unknown;
 
@@ -31,7 +34,10 @@ export async function retry<T>(
 
             lastError = error;
 
-            if (attempt < maxAttempts && shouldRetry(error)) {
+            if (
+                attempt < maxAttempts &&
+                shouldRetry(error)
+            ) {
 
                 const waitTime =
                     delayMs *
@@ -39,19 +45,21 @@ export async function retry<T>(
                         2,
                         attempt - 1
                     );
-              
-                logger.warn(`Attempt ${attempt} failed. Retrying in ${waitTime} seconds`);
+
+                logger.warn(
+                    `Attempt ${attempt} failed. ` +
+                    `Retrying in ${waitTime}ms`
+                );
 
                 await sleep(waitTime);
 
             } else {
-                throw lastError;
+
+                throw error;
+
             }
-
         }
-
     }
 
     throw lastError;
-
 }
