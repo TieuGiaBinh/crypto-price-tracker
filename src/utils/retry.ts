@@ -1,10 +1,18 @@
 import { sleep } from "./sleep";
 import { logger } from "./logger";
 
+interface RetryOptions {
+    maxAttempts?: number;
+    delayMs?: number;
+    shoudRetry?: (error: unknown) => boolean;
+}
 export async function retry<T>(
     operation: () => Promise<T>,
-    maxAttempts = 3,
-    delayMs = 1000
+    option: RetryOptions = {
+        maxAttempts = 3,
+        delayMs = 100,
+        shouldRetry = () => true
+    }
 ): Promise<T> {
 
     let lastError: unknown;
@@ -23,7 +31,7 @@ export async function retry<T>(
 
             lastError = error;
 
-            if (attempt < maxAttempts) {
+            if (attempt < maxAttempts && shouldRetry(error)) {
 
                 const waitTime =
                     delayMs *
@@ -32,10 +40,12 @@ export async function retry<T>(
                         attempt - 1
                     );
               
-                logger.warn(`Attempt ${attempt} failed`);
+                logger.warn(`Attempt ${attempt} failed. Retrying in ${waitTime} seconds`);
 
                 await sleep(waitTime);
 
+            } else {
+                throw lastError;
             }
 
         }
