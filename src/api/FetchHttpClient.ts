@@ -1,37 +1,63 @@
 import { HttpClient } from "./HttpClient";
+import { HttpError } from "./HttpError";
 import { retry } from "../utils/retry";
-import { logger } from "../utils/logger"
+import { logger } from "../utils/logger";
 
 export class FetchHttpClient
     implements HttpClient {
 
     constructor(
         private readonly timeoutMs = 5000
-    ){}
+    ) {}
 
     async get<T>(url: string): Promise<T> {
 
-        const controller = new AbortController();
+        logger.info(`GET ${url}`);
 
-        const timeout = setTimeout(() => controller.abort(), timeoutMs);
-        
-        const response = await retry(
-            () => fetch(url, {
-            signal: controller.signal
-            })
+        return retry(
+
+            async () => {
+
+                const controller = new AbortController();
+
+                const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
+
+                try {
+
+                    const response = await fetch(url, {signal: controller.signal});
+
+                    if (!response.ok) {
+
+                        throw new HttpError(response.status, `HTTP ${response.status}`);
+                    }
+
+                    return await response.json() as T;
+
+                } finally {
+
+                    clearTimeout(timeout);
+
+                }
+
+            },
+
+            {
+                maxAttempts: 3,
+                delayMs: 1000,
+                shouldRetry: (error) => this.shouldRetry(error)
+            }
+
         );
-
-        if (!response.ok) {
-            throw new Error(
-                `HTTP ${response.status}`
-            );
-        } else {
-            clearTimeout(timeout)
-            logger.info(`Get ${url} sucessfull`)
-        }
-        
-        return await response.json() as T;
-
     }
 
+    private shouldRetry(error: unknown): boolean {
+
+        if (!(error instanceof HttpError)) {
+
+            // Network error / timeout
+            return true;
+        }
+
+        return [429, 500, 502, 503, 504].includes(error.status);
+    }
 }
