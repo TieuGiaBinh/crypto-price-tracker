@@ -17,7 +17,7 @@ export class CoinGeckoClient implements PriceProvider {
     
     async getPrice(coin: Coin): Promise<number> {
 
-        const coinGeckoId = coinGeckoIds[coin];
+        const coinGeckoId = this.coinGeckoIds[coin];
         
         const url = `https://api.coingecko.com/api/v3/simple/price` + `?ids=${coinGeckoId}&vs_currencies=usd`;
 
