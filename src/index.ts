@@ -1,5 +1,5 @@
 console.log("Crypto Price Tracker started...");
-import { GoogleSheetsRepository } from "./repositories/GoogleSheetsRepository";
+import { GoogleSheetsRepository } from "./repositories/GooglesheetsRepository";
 import { PriceTrackerService } from "./services/PriceTrackerService";
 import { FetchHttpCLient } from "./api/FetchHttpClient"
 import { CoinGeckoClient } from "./api/CoinGeckoClient"
