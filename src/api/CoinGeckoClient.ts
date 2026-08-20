@@ -9,17 +9,20 @@ export class CoinGeckoClient implements PriceProvider {
         private readonly httpClient: HttpClient
     ) {}
 
-    async getPrice(
-        coin: Coin
-    ): Promise<number> {
+    const coinGeckoIds: Record<Coin, string> = {
+    BTC: "bitcoin",
+    ETH: "ethereum",
+    SOL: "solana"
+    };
+    
+    async getPrice(coin: Coin): Promise<number> {
 
-        const url =
-            `https://api.coingecko.com/api/v3/simple/price` +
-            `?ids=${coin}&vs_currencies=usd`;
+        const coinGeckoId = coinGeckoIds[coin];
+        
+        const url = `https://api.coingecko.com/api/v3/simple/price` + `?ids=${coinGeckoId}&vs_currencies=usd`;
 
-        const data =
-            await this.httpClient.get<CoinGeckoResponse>(url);
+        const data = await this.httpClient.get<CoinGeckoResponse>(url);
 
-        return data[coin].usd;
+        return data[coinGeckoId].usd;
     }
 }
