@@ -14,7 +14,7 @@ export class GoogleSheetsRepository
 
         await this.client.appendRow(
 
-            this.speadsheetID,
+            this.speadsheetId,
 
             "Sheet1!A:C",
             [
