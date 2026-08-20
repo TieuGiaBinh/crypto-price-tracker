@@ -3,7 +3,7 @@ import { GoogleSheetsRepository } from "./repositories/GooglesheetsRepository";
 import { PriceTrackerService } from "./services/PriceTrackerService";
 import { FetchHttpCLient } from "./api/FetchHttpClient"
 import { CoinGeckoClient } from "./api/CoinGeckoClient"
-import { GoogleSheetsClient } from ".google/GoogleSheetsClient"
+import { GoogleSheetsClient } from "./google/GoogleSheetsClient"
 
 async function main(): Promise<void>{
   
