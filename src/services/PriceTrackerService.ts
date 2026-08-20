@@ -17,7 +17,7 @@ export class PriceTrackerService {
         const price = await this.priceProvider.getPrice(coin);
 
         const coinPrice: CoinPrice ={
-            timestamp = new Date(),
+            timestamp: new Date(),
             coin,
             price
         };
