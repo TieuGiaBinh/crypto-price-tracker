@@ -9,7 +9,7 @@ export class CoinGeckoClient implements PriceProvider {
         private readonly httpClient: HttpClient
     ) {}
 
-    const coinGeckoIds: Record<Coin, string> = {
+    private readonly coinGeckoIds: Record<Coin, string> = {
     BTC: "bitcoin",
     ETH: "ethereum",
     SOL: "solana"
