@@ -7,9 +7,9 @@ import { GoogleSheetsClient } from "./google/GoogleSheetsClient"
 
 async function main(): Promise<void>{
   
-  const googlesheetsclient = new GoogleSheetsClient("./credentials/service-account.json");
+  const googlesheetsclient = new GoogleSheetsClient(process.env.GOOGLE_SERVICE_ACCOUNT!);
 
-  const repository = new GoogleSheetsRepository(googlesheetsclient, "YOUR_SPREADSHEET_ID");
+  const repository = new GoogleSheetsRepository(googlesheetsclient, process.env.GOOGLE_SPREADSHEET_ID!);
 
   const httpClient = new FetchHttpClient();
 
